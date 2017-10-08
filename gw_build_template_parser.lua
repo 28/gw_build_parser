@@ -37,47 +37,13 @@
    | --------------          |                                           |
    +-------------------------+-------------------------------------------+
 ]]
+local M = {_NAME="gw_build_template_parser"}
 
-local M = {_NAME="gw_build_parser"}
+require("util")
 
 local skills_table = require("data/skills")
 local attributes_table = require("data/attributes")
 local professions_table = require("data/professions")
-local base64_to_dec = require("data/base64")
-
-local function zero_pad_to(n, l)
-   if #n >= l then return n end
-   local p = l - #n
-   local r = n
-   for i = 1, p do
-      r = "0" .. r
-   end
-   return r
-end
-
-local function dec_to_bin(n)
-   local num = tonumber(n)
-   local s = ""
-
-   repeat
-      local b = num % 2
-      s = b .. s
-      local q = math.floor(num / 2)
-      num = q
-   until (num == 0)
-
-   return string.reverse(zero_pad_to(s, 6))
-end
-
-local function bin_to_dec(bin_str)
-   local bin = bin_str
-   local sum = 0
-   for i = 1, #bin do
-      local n = string.sub(bin, i, i)
-      sum = sum + n * math.pow(2, i - 1)
-   end
-   return sum
-end
 
 local function get_professions(T)
    -- Profession length (in bits)
@@ -131,28 +97,7 @@ local function get_skills(T)
 end
 
 function M.parse(T_text)
-   local T = { txt = T_text}
-   -- Add subscript indexing
-   setmetatable(T, {
-                   __index = function(self, i)
-                      return string.sub(self.txt, i, i)
-                   end,
-                   __call = function(self, i, j)
-                      if j then
-                         return string.sub(self.bin, i, j)
-                      else
-                         return string.sub(self.bin, i, i)
-                      end
-                   end
-   })
-
-   T.bin = ""
-   for i = 1, #T.txt do
-      local c = T[i]
-      local n = base64_to_dec[c]
-      local b = dec_to_bin(n)
-      T.bin = T.bin .. b
-   end
+   local T = init(T_text)
 
    -- Populate
    get_professions(T)
