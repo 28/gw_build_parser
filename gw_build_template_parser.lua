@@ -39,7 +39,7 @@
 ]]
 local M = {_NAME="gw_build_template_parser"}
 
-require("util")
+require("common")
 
 local skills_table = require("data/skills")
 local attributes_table = require("data/attributes")
