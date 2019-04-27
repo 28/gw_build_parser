@@ -1,5 +1,7 @@
 # Guild Wars 1 skill build/equipment template parser
 
+Author: Johnt Knoxville
+
 A script for parsing Guild Wars 1 skill/build and equipment template codes.
 
 Template code format for skills is explained [here](https://wiki.guildwars.com/wiki/Skill_template_format).
